@@ -1,19 +1,23 @@
+
 module devSelect(clk, frame,decoderInput, devSelect);
 
 input wire clk, frame, decoderInput;
 output reg devSelect = 1;
-reg delayReg =0;
-reg delayReg2=0 ;
+reg delayReg =1;
+reg delayReg2=1;
 
 always@(negedge clk)
 begin 
-if(negedge frame)
+if (decoderInput)
 begin
-    delayReg <= decoderInput;
+if(!frame)
+begin
+    delayReg <= frame;
     delayReg2 <= delayReg;
     devSelect <= delayReg2; 
 end
-else if(posedge frame)
+end
+if(frame)
 begin 
     delayReg <= 1;
     devSelect <= delayReg;
@@ -37,15 +41,15 @@ $monitor($time ,,,"Devsel=%d frame=%d decoderInput=%d clk=%d",devSelect,frame ,d
     frame = 1;
     decoderInput = 0;
 
-    #10
+    #20
     frame = 0;
     decoderInput = 1;
 
-    #30
+    #50
     decoderInput = 0;
 
-    #200
-    frame = 0;
+    #210
+    frame = 1;
 
 end
 
