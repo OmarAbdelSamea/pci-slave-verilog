@@ -1,0 +1,46 @@
+module devSelect(clk, frame,decoderInput, devSelect);
+
+input wire clk, frame, decoderInput;
+output reg devSelect = 0;
+reg delayReg =0;
+reg delayReg2=0 ;
+
+always@(negedge clk)
+begin 
+if(frame == 0)
+begin
+    delayReg <= decoderInput;
+    delayReg2 <= delayReg;
+    devSelect <= delayReg2; 
+
+
+end
+end
+
+
+endmodule
+
+
+module devSelectTB();
+
+reg clk, frame, decoderInput;
+wire devSelect ;
+initial 
+begin
+$monitor($time ,,,"Devsel=%d frame=%d decoderInput=%d clk=%d",devSelect,frame ,decoderInput,clk);
+    frame = 0;
+    clk = 1;
+    decoderInput = 1;
+    #25
+    clk = 0;
+
+    #25 clk =1;
+    #25 clk =0;
+
+    #25 clk =1;
+    #25 clk =0;
+
+end
+devSelect d1(clk,frame,decoderInput,devSelect);
+
+endmodule
