@@ -1,23 +1,23 @@
-module ReadData(clk,RW,Devsel,Iready,RD);
+module ReadData(clk,RW,Devsel,Iready,RE,WE);
 input wire Devsel,Iready,clk;
 input wire [1:0] RW;
-output reg[1:0] RD;
+output reg[1:0] RE,WE;
  
 always@(negedge clk)
 begin
 if(Devsel==0 && Iready==0)
 begin
 case(RW)
-0: RD=0; 
-1: RD=1;
-2: RD=2;
-3: RD=0;
-default:RD=0;
+0: begin RE=0;WE=0; end
+1: begin RE=1;WE=0; end
+2: begin RE=0;WE=1; end
+default:begin RE=0;WE=0; end
 endcase
 end
 else
 begin 
-RD=0;
+RE=0;
+WE=0;
 end
 end
 endmodule 
@@ -25,10 +25,10 @@ endmodule
 module ReadDatatest ();
 reg clk,Devsel,Iready;
 reg [1:0] RW;
-wire [1:0] RD;
+wire [1:0] RE,WE;
 initial
 begin
-$monitor($time ,,,"Devsel=%b RW=%d Iready=%b RD=%d",Devsel,RW ,Iready,RD);
+$monitor($time ,,,"Devsel=%b RW=%d Iready=%b RE=%d WE=%d",Devsel,RW ,Iready,RE,WE);
 clk=0;
 Devsel=0;
 Iready=0; 
@@ -62,5 +62,5 @@ always
 begin 
 #5 clk=~clk;
 end
-ReadData R1(clk,RW,Devsel,Iready,RD);
+ReadData R1(clk,RW,Devsel,Iready,RE,WE);
 endmodule
