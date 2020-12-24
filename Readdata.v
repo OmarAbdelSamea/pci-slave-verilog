@@ -12,7 +12,7 @@ begin
  1: RD=1;
  2: RD=2;
  3: RD=0;
-endcase
+ endcase
 end
 end
 endmodule 
