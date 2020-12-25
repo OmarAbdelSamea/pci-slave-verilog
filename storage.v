@@ -1,19 +1,17 @@
-module storage(Data,F,clk,Address,RE,WE,BE,TrdyControl);
+
+module storage(Data,F,clk,Address,RE,WE,BE,TrdyControl,addressReg);
 inout wire [31:0]Data;
 wire [31:0]DataOut;
 input [1:0]Address;
 input RE,WE,clk,F;
 input [3:0]BE;
 output reg TrdyControl = 1;
-
-
-//reg [31:0]Regtest = 15;
-
+reg [31:0]regBuffer;
 reg[31:0] mem[0:2];
-reg [1:0]addressReg = 3;
-reg Frame,re,we,be;
-
-
+output reg [1:0]addressReg = 3;
+reg [1:0] address;
+reg Frame,re,we;
+reg [3:0] be;
 assign Data = (RE) ? mem[addressReg] : 32'bzzzzzzzzzzzzzzzz;
 assign DataOut = (WE)? Data: 32'bzzzzzzzzzzzzzzzz; //a is in input mode
 
@@ -23,6 +21,11 @@ Frame<=F;
 re<=RE;
 we<=WE;
 be<=BE;
+address <= Address;
+if(we)
+begin
+regBuffer <= DataOut;
+end
 end
 
 always@(negedge clk)
@@ -34,34 +37,38 @@ end
 else if(TrdyControl==0)
 begin
 TrdyControl<=1;
-addressReg<=0;
 end
 else if(!Frame && addressReg == 3)
 begin
-addressReg<=Address;
+addressReg<=address;
 end
 else
 begin
-if(WE)
+if(we)
 begin
-mem[addressReg] <= DataOut;
-case(addressReg)
-0 : addressReg <= 1;
-1 : addressReg <= 2;
-2 : TrdyControl <= 0;
-endcase
-end
-else if(RE)
+if(be[0])
+mem[addressReg][7:0] <= regBuffer[7:0];
+if(be[1])
+mem[addressReg][15:8] <= regBuffer[15:8];
+if(be[2])
+mem[addressReg][23:16] <= regBuffer[23:16];
+if(be[3])
+mem[addressReg][31:24] <= regBuffer[31:24];
+if(addressReg == 2)
 begin
-case(addressReg)
-0 : addressReg <= 1;
-1 : addressReg <= 2;
-2 : addressReg <= 0;
-endcase
+TrdyControl <= 0;
+addressReg<=0;
+end
+addressReg <= addressReg + 1;
+end
+else if(re)
+begin
+addressReg <= addressReg + 1;
+if(addressReg == 2)
+addressReg <= 0;
 end
 end
 end
-
 endmodule
 
 
@@ -77,68 +84,79 @@ reg WE = 0;
 reg [3:0]BE = 0;
 reg clk;
 wire TrdyControl;
+wire [1:0]addressReg;
 
 assign Data = (WE)? DataRegTest: 32'bzzzzzzzzzzzzzzzz; //a is in input mode
 assign DataOut = (RE)? Data: 32'bzzzzzzzzzzzzzzzz; //a is in input mode
-storage s(Data,F,clk,Address,RE,WE,BE,TrdyControl);
+storage s(Data,F,clk,Address,RE,WE,BE,TrdyControl,addressReg);
 initial 
 begin
 clk = 0;
 F=1;
 $monitor("Data = %b , TrdyControl = %b ",DataOut,TrdyControl);
-#20
+#10
 F = 0;
 WE = 1;
 RE = 0;
 Address = 0;
-DataRegTest = 1;
 
-#20
+#10
 F = 0;
 WE = 1;
 RE = 0;
 Address = 0;
+BE = 4'b1111;
 DataRegTest = 2;
 
-#20
+#10
 F = 0;
 WE = 1;
 RE = 0;
+BE = 4'b0010;
 Address = 0;
-DataRegTest = 3;
+DataRegTest = 32'h0000ff00;
 
-#20
+#10
 F = 0;
 WE = 1;
 RE = 0;
 Address = 0;
+BE = 4'b1111;
 DataRegTest = 4;
 
-#20
+/*
+#10
+F = 0;
+WE = 1;
+RE = 0;
+Address = 0;
+DataRegTest = 5;
+*/
+
+#10
 F = 1;
 WE = 0;
 RE = 0;
 Address = 0;
 
-#20
+#10
 F = 0;
 WE = 0;
 RE = 1;
 Address = 0;
 
-#20
+#10
 F = 0;
 WE = 0;
 RE = 1;
 Address = 0;
 
-#20
+#10
 F = 0;
 WE = 0;
 RE = 1;
 Address = 0;
 end
-
 always 
 begin
      #5 clk=~clk;
