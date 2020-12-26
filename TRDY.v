@@ -1,22 +1,18 @@
 module TRDY (clk,devsel,Trdy,storageControl);
 input clk,devsel,storageControl;
 output reg Trdy;
-reg storageControlTemp;
-always@(posedge clk)
-begin
-storageControlTemp<=storageControl;
-end
+
+
 always@(negedge clk)
 begin
-if(storageControlTemp==1)
+if(devsel==0)
 begin
-	case (devsel)
-	0: Trdy<=0;
-	1: Trdy<=1;
+	case (storageControl)
+	0: Trdy<=1;
+	1: Trdy<=0;
 	default:Trdy<=1;
 endcase
 end
-
 else
 begin 
 Trdy<=1;
