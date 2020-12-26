@@ -12,7 +12,7 @@ reg [1:0] address;
 reg Frame,re,we;
 reg [3:0] be;
 
-reg {31:0} buffer[0:5];
+reg [31:0] buffer[0:5];
 reg [2:0]bufferAddress = 0;
 
 assign Data = (RE) ? mem[addressReg] : 32'bzzzzzzzzzzzzzzzz;
@@ -25,7 +25,6 @@ re<=RE;
 we<=WE;
 be<=BE;
 address <= Address;
-fixedaddress <= Address;
 if(we)
 begin
 regBuffer <= DataOut;
