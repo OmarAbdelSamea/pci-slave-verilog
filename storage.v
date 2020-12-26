@@ -35,6 +35,7 @@ always@(negedge clk)
 begin
 if(Frame)
 begin
+TrdyControl<=1;
 bufferAddress = 0;
 addressReg<=3;
 end
