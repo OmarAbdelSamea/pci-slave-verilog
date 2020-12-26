@@ -1,4 +1,3 @@
-
 module storage(Data,F,clk,Address,RE,WE,BE,TrdyControl,addressReg);
 inout wire [31:0]Data;
 wire [31:0]DataOut;
@@ -12,6 +11,10 @@ output reg [1:0]addressReg = 3;
 reg [1:0] address;
 reg Frame,re,we;
 reg [3:0] be;
+
+reg {31:0} buffer[0:5];
+reg [2:0]bufferAddress = 0;
+
 assign Data = (RE) ? mem[addressReg] : 32'bzzzzzzzzzzzzzzzz;
 assign DataOut = (WE)? Data: 32'bzzzzzzzzzzzzzzzz; //a is in input mode
 
@@ -22,6 +25,7 @@ re<=RE;
 we<=WE;
 be<=BE;
 address <= Address;
+fixedaddress <= Address;
 if(we)
 begin
 regBuffer <= DataOut;
@@ -32,12 +36,26 @@ always@(negedge clk)
 begin
 if(Frame)
 begin
+bufferAddress = 0;
 addressReg<=3;
 end
+
 else if(TrdyControl==0)
 begin
+buffer[bufferAddress]<=mem[0];
+buffer[bufferAddress+1]<=mem[1];
+buffer[bufferAddress+2]<=mem[2];
+if(bufferAddress == 0)
+begin
+bufferAddress <= bufferAddress + 3;
+end
+else
+begin
+bufferAddress <= 0;
+end
 TrdyControl<=1;
 end
+
 else if(!Frame && addressReg == 3)
 begin
 addressReg<=address;

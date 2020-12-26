@@ -8,7 +8,7 @@ storageControlTemp<=storageControl;
 end
 always@(negedge clk)
 begin
-if(storageControlTemp==0)
+if(storageControlTemp==1)
 begin
 	case (devsel)
 	0: Trdy<=0;
