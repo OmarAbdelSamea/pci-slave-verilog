@@ -1,8 +1,8 @@
-module storage(Data,F,clk,Address,RE,WE,BE,TrdyControl);
+module storage(Data,F,clk,Address,RE,WE,BE,RST,TrdyControl);
 inout wire [31:0]Data;
 wire [31:0]DataOut;
 input [1:0]Address;
-input RE,WE,clk,F;
+input RE,WE,clk,F,RST;
 input [3:0]BE;
 output reg TrdyControl = 1;
 reg [31:0]regBuffer;
@@ -19,8 +19,7 @@ assign Data = (RE) ? mem[addressReg] : 32'bzzzzzzzzzzzzzzzz;
 assign DataOut = (WE)? Data: 32'bzzzzzzzzzzzzzzzz; //a is in input mode
 
 reg read,write;
-
-always@(posedge clk)
+always@(posedge clk && RST)
 begin
 Frame<=F;
 be<=BE;
@@ -33,9 +32,9 @@ regBuffer <= DataOut;
 end
 end
 
-always@(negedge clk)
+always@(negedge clk && RST)
 begin
-if(Frame == 1 && write == 0)
+if(Frame == 1 && write == 0 && read == 0)
 begin
 TrdyControl<=1;
 bufferAddress = 0;

@@ -1,19 +1,24 @@
-module devSelect(clk, frame,decoderInput, devSelect);
+module devSelect(clk, frame,decoderInput,RST,devSelect);
 
-input wire clk, frame;
+input wire clk, frame,RST;
 reg F;
 reg DI;
 input wire [1:0] decoderInput;
 output reg devSelect;
 reg delayReg=1;
 reg onChange=1;
- 
-always@(posedge clk)
+
+
+always@(negedge RST)
+begin 
+devSelect <= 1'bz;
+end
+always@(posedge clk && RST)
 begin 
 F <= frame;
 DI <= decoderInput;
 end
-always@(negedge clk)
+always@(negedge clk && RST)
 begin
 
 if (F == 0)
