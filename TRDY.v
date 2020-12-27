@@ -5,18 +5,11 @@ output reg Trdy;
 
 always@(negedge clk)
 begin
-if(devsel==0)
-begin
-	case (storageControl)
+case (storageControl)
 	0: Trdy<=1;
-	1: Trdy<=0;
+	1: Trdy<=devsel;
 	default:Trdy<=1;
 endcase
-end
-else
-begin 
-Trdy<=1;
-end
 end
 endmodule
 
@@ -31,15 +24,27 @@ devsel=0;
 storageControl=1;
 #50
 devsel=0;
-storageControl=0;
-#50
-devsel=0;
-storageControl=0;
-#50
-devsel=0;
-storageControl=0;
+storageControl=1;
 #50
 devsel=1;
+storageControl=1;
+#50
+devsel=0;
+storageControl=1;
+#50
+devsel=0;
+storageControl=1;
+#50
+devsel=1;
+storageControl=1;
+#50
+devsel=0;
+storageControl=1;
+#50
+devsel=0;
+storageControl=1;
+#50
+devsel=0;
 storageControl=0;
 #50
 devsel=0;
@@ -47,9 +52,6 @@ storageControl=0;
 #50
 devsel=0;
 storageControl=1;
-#50
-devsel=0;
-storageControl=0;
 end
 TRDY R1(clk,devsel,Trdy,storageControl);
 always
