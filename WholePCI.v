@@ -3,7 +3,7 @@ inout [31:0]AddressData;
 input [3:0]CBE;
 input Frame,Irdy;
 output Devsel,Trdy;
-reg Clock;
+wire Clock;
 ClockGen clk(Clock);
 wire [1:0]decoderDevsel;
 addressDecoder decoder(AddressData,decoderDevsel);
@@ -18,12 +18,23 @@ TRDY Tready(Clock,Devsel,Trdy,TrdyControl);
 endmodule
 
 
-module PCITB();
+module PCITB(AddressData);
 reg Frame,Irdy;
-reg [31:0]AddressData;
+inout [31:0]AddressData;
+
+reg [31:0]AddressDataIn;
+wire [31:0]AddressDataOut;
+
+
+
+assign AddressData = (1)? AddressDataIn: 32'bzzzzzzzzzzzzzzzz; 
+assign AddressDataOut = (1)? AddressData: 32'bzzzzzzzzzzzzzzzz;
+
 reg [3:0]CBE;
 wire Devsel,Trdy;
 PCI pci(Frame,AddressData,CBE,Irdy,Devsel,Trdy);
+wire Clock;
+ClockGen clk(Clock);
 initial
 begin
 Frame=1;
@@ -31,22 +42,22 @@ Irdy=1;
 #10
 Frame=0;
 Irdy=1;
-AddressData=0;
+AddressDataIn=21;
 CBE=7;
 #10
 Frame=0;
 Irdy=0;
-AddressData=32'h11111111;
+AddressDataIn=32'h11111111;
 CBE=4'b1111;
 #10
 Frame=0;
 Irdy=0;
-AddressData=32'h22222222;
+AddressDataIn=32'h22222222;
 CBE=4'b1111;
 #10
 Frame=1;
 Irdy=0;
-AddressData=32'h33333333;
+AddressDataIn=32'h33333333;
 CBE=4'b1111;
 
 #10
@@ -56,8 +67,8 @@ Irdy=1;
 #10
 Frame=0;
 Irdy=1;
-AddressData=0;
-CBE=4'b1111;
+AddressDataIn=21;
+CBE=6;
 
 #10
 Frame=0;
