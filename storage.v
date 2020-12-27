@@ -9,7 +9,7 @@ reg [31:0]regBuffer;
 reg[31:0] mem[0:2];
 output reg [1:0]addressReg = 3;
 reg [1:0] address;
-reg Frame,re,we;
+reg Frame;
 reg [3:0] be;
 
 reg [31:0] buffer[0:5];
@@ -21,11 +21,9 @@ assign DataOut = (WE)? Data: 32'bzzzzzzzzzzzzzzzz; //a is in input mode
 always@(posedge clk)
 begin
 Frame<=F;
-re<=RE;
-we<=WE;
 be<=BE;
 address <= Address;
-if(we)
+if(WE)
 begin
 regBuffer <= DataOut;
 end
@@ -62,7 +60,7 @@ addressReg<=address;
 end
 else
 begin
-if(we)
+if(WE)
 begin
 if(be[0])
 mem[addressReg][7:0] <= regBuffer[7:0];
@@ -79,7 +77,7 @@ addressReg<=0;
 end
 addressReg <= addressReg + 1;
 end
-else if(re)
+else if(RE)
 begin
 addressReg <= addressReg + 1;
 if(addressReg == 2)
@@ -153,7 +151,7 @@ DataRegTest = 5;
 
 #10
 F = 1;
-WE = 0;
+WE = 1;
 RE = 0;
 Address = 0;
 
