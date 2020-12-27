@@ -1,9 +1,9 @@
-module ReadData(clk,RW,Devsel,Iready,RE,WE);
-input wire Devsel,Iready,clk;
+module ReadData(RW,Devsel,Iready,RE,WE);
+input wire Devsel,Iready;
 input wire [1:0] RW;
 output reg[1:0] RE,WE;
  
-always@(negedge clk)
+always@(RW,Iready,Devsel)
 begin
 if(Devsel==0 && Iready==0)
 begin
@@ -29,7 +29,6 @@ wire [1:0] RE,WE;
 initial
 begin
 $monitor($time ,,,"Devsel=%b RW=%d Iready=%b RE=%d WE=%d",Devsel,RW ,Iready,RE,WE);
-clk=0;
 Devsel=0;
 Iready=0; 
 RW=2;
@@ -58,9 +57,5 @@ Devsel=1;
 Iready=0;
 RW=1;
 end 
-always
-begin 
-#5 clk=~clk;
-end
-ReadData R1(clk,RW,Devsel,Iready,RE,WE);
+ReadData R1(RW,Devsel,Iready,RE,WE);
 endmodule

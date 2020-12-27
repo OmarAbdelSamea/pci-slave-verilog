@@ -18,10 +18,14 @@ reg [2:0]bufferAddress = 0;
 assign Data = (RE) ? mem[addressReg] : 32'bzzzzzzzzzzzzzzzz;
 assign DataOut = (WE)? Data: 32'bzzzzzzzzzzzzzzzz; //a is in input mode
 
+reg read,write;
+
 always@(posedge clk)
 begin
 Frame<=F;
 be<=BE;
+read<=RE;
+write<=WE;
 address <= Address;
 if(WE)
 begin
@@ -31,7 +35,7 @@ end
 
 always@(negedge clk)
 begin
-if(Frame)
+if(Frame == 1 && write == 0)
 begin
 TrdyControl<=1;
 bufferAddress = 0;
@@ -60,7 +64,7 @@ addressReg<=address;
 end
 else
 begin
-if(WE)
+if(write)
 begin
 if(be[0])
 mem[addressReg][7:0] <= regBuffer[7:0];
@@ -77,7 +81,7 @@ addressReg<=0;
 end
 addressReg <= addressReg + 1;
 end
-else if(RE)
+else if(read)
 begin
 addressReg <= addressReg + 1;
 if(addressReg == 2)
@@ -100,17 +104,16 @@ reg WE = 0;
 reg [3:0]BE = 0;
 reg clk;
 wire TrdyControl;
-wire [1:0]addressReg;
 
 assign Data = (WE)? DataRegTest: 32'bzzzzzzzzzzzzzzzz; //a is in input mode
 assign DataOut = (RE)? Data: 32'bzzzzzzzzzzzzzzzz; //a is in input mode
-storage s(Data,F,clk,Address,RE,WE,BE,TrdyControl,addressReg);
+storage s(Data,F,clk,Address,RE,WE,BE,TrdyControl);
 initial 
 begin
 clk = 0;
 F=1;
 $monitor("Data = %b , TrdyControl = %b ",DataOut,TrdyControl);
-#10
+/*#10
 F = 0;
 WE = 1;
 RE = 0;
@@ -140,21 +143,21 @@ Address = 0;
 BE = 4'b1111;
 DataRegTest = 4;
 
-/*
+
 #10
 F = 0;
 WE = 1;
 RE = 0;
 Address = 0;
 DataRegTest = 5;
-*/
+
 
 #10
 F = 1;
 WE = 1;
 RE = 0;
 Address = 0;
-
+*/
 #10
 F = 0;
 WE = 0;

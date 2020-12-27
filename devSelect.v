@@ -5,8 +5,7 @@ reg F;
 reg DI;
 input wire [1:0] decoderInput;
 output reg devSelect;
-reg delayReg=1 ;
-reg delayReg2=1;
+reg delayReg=1;
 reg onChange=1;
  
 always@(posedge clk)

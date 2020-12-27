@@ -3,7 +3,7 @@ input clk,devsel,storageControl;
 output reg Trdy = 1;
 
 
-always@(negedge clk)
+always@(devsel)
 begin
 case (storageControl)
 	0: Trdy<=1;
@@ -22,34 +22,34 @@ $monitor($time ,,,"Devsel=%b  Trdy=%b storageControl=%b",devsel,Trdy,storageCont
 clk=0;
 devsel=0;
 storageControl=1;
-#50
+#60
 devsel=0;
 storageControl=1;
-#50
+#60
 devsel=1;
 storageControl=1;
-#50
+#60
 devsel=0;
 storageControl=1;
-#50
+#60
 devsel=0;
 storageControl=1;
-#50
+#60
 devsel=1;
 storageControl=1;
-#50
+#60
 devsel=0;
 storageControl=1;
-#50
+#60
 devsel=0;
 storageControl=1;
-#50
+#60
 devsel=0;
 storageControl=0;
-#50
+#60
 devsel=0;
 storageControl=0;
-#50
+#60
 devsel=0;
 storageControl=1;
 end

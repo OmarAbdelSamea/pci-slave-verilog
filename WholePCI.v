@@ -11,7 +11,7 @@ devSelect dvsl(Clock, Frame,decoderDevsel,Devsel);
 wire [1:0]rw;
 RW readWrite(CBE,Frame,Clock,rw);
 wire RE,WE;
-ReadData readData(Clock,rw,Devsel,Irdy,RE,WE);
+ReadData readData(rw,Devsel,Irdy,RE,WE);
 wire TrdyControl;
 storage mem(AddressData,Frame,Clock,decoderDevsel,RE,WE,CBE,TrdyControl);
 TRDY Tready(Clock,Devsel,Trdy,TrdyControl);
@@ -25,10 +25,10 @@ inout [31:0]AddressData;
 reg [31:0]AddressDataIn;
 wire [31:0]AddressDataOut;
 
+reg in,out;
 
-
-assign AddressData = (1)? AddressDataIn: 32'bzzzzzzzzzzzzzzzz; 
-assign AddressDataOut = (1)? AddressData: 32'bzzzzzzzzzzzzzzzz;
+assign AddressData = (in)? AddressDataIn: 32'bzzzzzzzzzzzzzzzz;
+assign AddressDataOut = (out)? AddressData: 32'bzzzzzzzzzzzzzzzz;
 
 reg [3:0]CBE;
 wire Devsel,Trdy;
@@ -39,21 +39,30 @@ initial
 begin
 Frame=1;
 Irdy=1;
+in = 1;
+out = 0;
+
 #10
 Frame=0;
 Irdy=1;
 AddressDataIn=21;
 CBE=7;
+
 #10
 Frame=0;
 Irdy=0;
-AddressDataIn=32'h11111111;
+AddressDataIn=32'hzzzzzzzz;
 CBE=4'b1111;
+
+#10
+AddressDataIn=32'h11111111;
+
 #10
 Frame=0;
 Irdy=0;
 AddressDataIn=32'h22222222;
 CBE=4'b1111;
+
 #10
 Frame=1;
 Irdy=0;
@@ -63,16 +72,20 @@ CBE=4'b1111;
 #10
 Frame=1;
 Irdy=1;
+AddressDataIn=32'hzzzzzzzz;
 
 #10
 Frame=0;
 Irdy=1;
+in = 1;
 AddressDataIn=21;
 CBE=6;
 
 #10
 Frame=0;
 Irdy=0;
+in=0;
+out = 1;
 CBE=4'b1111;
 
 #10
@@ -85,6 +98,20 @@ Frame=0;
 Irdy=0;
 CBE=4'b1111;
 
+#10
+Frame=0;
+Irdy=0;
+CBE=4'b1111;
+
+#10
+Frame=0;
+Irdy=0;
+CBE=4'b1111;
+
+#10
+Frame=0;
+Irdy=0;
+CBE=4'b1111;
 
 #10
 Frame=1;
