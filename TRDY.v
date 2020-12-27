@@ -1,6 +1,6 @@
 module TRDY (clk,devsel,Trdy,storageControl);
 input clk,devsel,storageControl;
-output reg Trdy;
+output reg Trdy = 1;
 
 
 always@(negedge clk)

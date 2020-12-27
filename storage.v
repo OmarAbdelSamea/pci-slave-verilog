@@ -1,4 +1,4 @@
-module storage(Data,F,clk,Address,RE,WE,BE,TrdyControl,addressReg);
+module storage(Data,F,clk,Address,RE,WE,BE,TrdyControl);
 inout wire [31:0]Data;
 wire [31:0]DataOut;
 input [1:0]Address;
@@ -7,7 +7,7 @@ input [3:0]BE;
 output reg TrdyControl = 1;
 reg [31:0]regBuffer;
 reg[31:0] mem[0:2];
-output reg [1:0]addressReg = 3;
+reg [1:0]addressReg = 3;
 reg [1:0] address;
 reg Frame;
 reg [3:0] be;

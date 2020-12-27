@@ -1,7 +1,8 @@
-
 module devSelect(clk, frame,decoderInput, devSelect);
 
 input wire clk, frame;
+reg F;
+reg DI;
 input wire [1:0] decoderInput;
 output reg devSelect;
 reg delayReg=1 ;
@@ -10,23 +11,31 @@ reg onChange=1;
  
 always@(posedge clk)
 begin 
-if (frame == 0)
-begin
- if(decoderInput < 3)
- 	begin
-    	delayReg <= frame;
-    	onChange <= delayReg; 
-	end
-
-end
-else
-begin 
-  onChange<=1;
-end
+F <= frame;
+DI <= decoderInput;
 end
 always@(negedge clk)
 begin
-    devSelect <= onChange;
+
+if (F == 0)
+begin
+ if(DI < 3)
+ 	begin
+	delayReg<=0;
+	devSelect<=delayReg;
+	end
+ else
+	begin 	
+	delayReg=1;
+	devSelect<=1;
+	end 
+end
+else
+begin 
+	delayReg=1;
+	devSelect<=1;
+end
+
 end
 endmodule
 

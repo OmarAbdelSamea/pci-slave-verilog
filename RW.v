@@ -19,12 +19,12 @@ if(Frame)
 begin
 rw<=0;
 end
-if(!Frame && rw == 0 && CBEreg == 6)
+if(!Frame && rwreg == 0 && CBEreg == 6)
 begin
 rw <= 1;
 end
 
-if(!Frame && rw == 0 && CBEreg == 7)
+if(!Frame && rwreg == 0 && CBEreg == 7)
 begin
 rw <= 2;
 end
