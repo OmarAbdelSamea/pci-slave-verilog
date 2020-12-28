@@ -43,7 +43,7 @@ out = 0;
 Frame = 1;
 Irdy =  1;
 RST = 1;
-/*
+
 #10//10
 Frame = 0;
 CBE = 7;
@@ -173,8 +173,8 @@ Frame = 1;
 #10//180
 CBE = 0;
 Irdy =  1;
-*/
 
+/*
 Frame=1;//0
 Irdy=1;
 in = 1;
@@ -255,7 +255,7 @@ CBE=4'b1111;
 Frame=1;
 Irdy=1;
 CBE=4'b1111;
-
+*/
 end
 
 endmodule 
