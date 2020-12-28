@@ -78,7 +78,10 @@ begin
 TrdyControl <= 0;
 addressReg<=0;
 end
+else
+begin
 addressReg <= addressReg + 1;
+end
 end
 else if(read)
 begin
@@ -112,6 +115,31 @@ begin
 clk = 0;
 F=1;
 $monitor("Data = %b , TrdyControl = %b ",DataOut,TrdyControl);
+
+#10
+F = 1;
+WE = 0;
+RE = 0;
+Address = 2'bzz;
+
+#10
+F = 0;
+WE = 0;
+RE = 0;
+Address = 0;
+
+#10
+F = 0;
+WE = 1;
+RE = 0;
+DataRegTest = 32'h1;
+
+#10
+F = 0;
+WE = 0;
+RE = 0;
+
+
 /*#10
 F = 0;
 WE = 1;
@@ -156,24 +184,25 @@ F = 1;
 WE = 1;
 RE = 0;
 Address = 0;
+
+#10
+F = 0;
+WE = 0;
+RE = 1;
+Address = 0;
+
+#10
+F = 0;
+WE = 0;
+RE = 1;
+Address = 0;
+
+#10
+F = 0;
+WE = 0;
+RE = 1;
+Address = 0;
 */
-#10
-F = 0;
-WE = 0;
-RE = 1;
-Address = 0;
-
-#10
-F = 0;
-WE = 0;
-RE = 1;
-Address = 0;
-
-#10
-F = 0;
-WE = 0;
-RE = 1;
-Address = 0;
 end
 always 
 begin

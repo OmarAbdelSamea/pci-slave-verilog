@@ -3,7 +3,7 @@ input clk,devsel,storageControl;
 output reg Trdy = 1;
 
 
-always@(devsel)
+always@(devsel or storageControl)
 begin
 case (storageControl)
 	0: Trdy<=1;

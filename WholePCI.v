@@ -33,7 +33,8 @@ assign AddressDataOut = (out)? AddressData: 32'bzzzzzzzzzzzzzzzz;
 
 reg [3:0]CBE;
 wire Devsel,Trdy;
-PCI pci(Frame,AddressData,CBE,Irdy,Devsel,Trdy);
+wire [1:0]addressreg;
+PCI pci(Frame,AddressData,CBE,Irdy,Devsel,Trdy,RST);
 wire Clock;
 ClockGen clk(Clock);
 initial
@@ -47,7 +48,7 @@ RST=1;
 #10//10
 Frame=0;
 Irdy=1;
-AddressDataIn=21;
+AddressDataIn=22;
 CBE=7;
 
 #10//20
@@ -64,6 +65,13 @@ Frame=0;
 Irdy=0;
 AddressDataIn=32'h22222222;
 CBE=4'b1111;
+
+#10//40
+Frame=0;
+Irdy=0;
+AddressDataIn=32'h33333333;
+CBE=4'b1111;
+
 
 #10//50
 Frame=1;
