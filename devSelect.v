@@ -22,9 +22,11 @@ DI <= decoderInput;
 end
 always@(negedge clk && RST)
 begin
+
 if(F)
 begin 
-devselReg <= 4;
+devSelect<=1;
+devselReg<=4;
 end
 else if(F == 0 && devselReg == 4)
 begin 
@@ -32,16 +34,10 @@ devselReg <= DI;
 end
 else
 begin
- if(devselReg < 3)
+ 	if(devselReg < 3)
  	begin
-	delayReg<=0;
-	devSelect<=delayReg;
+	devSelect<=0;
 	end
- else
-	begin 	
-	delayReg<=1;
-	devSelect<=1;
-	end 
 end
 end
 endmodule

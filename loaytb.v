@@ -150,7 +150,10 @@ end
 
 
 
-// ONE DATA TB 
+
+
+
+//DATA ONE 1
 initial
 begin
 Frame=1;//0
@@ -211,7 +214,14 @@ Irdy=1;
 CBE=4'b1111;
 
 
-#10
+
+end
+
+
+
+//DATA ONE 2
+initial
+begin
 Frame=1;//0
 Irdy=1;
 in = 1;
@@ -270,7 +280,12 @@ Irdy=1;
 CBE=4'b1111;
 
 
-#10
+
+end
+
+//DATA ONE 3
+initial
+begin
 Frame=1;//0
 Irdy=1;
 in = 1;
@@ -322,9 +337,12 @@ out = 1;
 CBE=4'b1111;
 
 
+
 #10//120
 Frame=1;
 Irdy=1;
 CBE=4'b1111;
+
+
 
 end
